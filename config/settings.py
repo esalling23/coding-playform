@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     # Custom Apps
     'auth',
     'playform',
+    # Rest framework
+    'rest_framework',
+    'rest_framework.authtoken',
+
+
 ]
 
 MIDDLEWARE = [
@@ -107,6 +112,26 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Django Rest Framework
+#
+# The default authentication class for all views will be TokenAuthentication
+# which defines how we authenticate
+# https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+#
+# The default permission class for all views will be IsAuthenticated to require
+# authentication for access
+# https://www.django-rest-framework.org/api-guide/permissions/#isauthenticated
+#
+# These can be overridden on individual views
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ]
+}
 
 
 # Internationalization
