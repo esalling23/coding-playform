@@ -4,6 +4,12 @@ from django.contrib.auth import get_user_model
 from .challenge import Challenge
 
 class Attempt(models.Model):
+    """
+    A user's attempt at a coding challenge
+
+    Attempt -|--|- Challenge
+    Attempt >--|- User
+    """
     # Ownership field - relationship to `User` model
     owner = models.ForeignKey(
         get_user_model(),
@@ -20,5 +26,8 @@ class Attempt(models.Model):
     user_solution = models.TextField()
     # Number of times user's solution has passed or failed
     # the provided tests for the associated challenge
-    passes = models.IntegerField()
-    failures = models.IntegerField()
+    passes = models.IntegerField(default=0)
+    failures = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Attempt #{self.id}"
