@@ -6,14 +6,6 @@ from rest_framework.authtoken.models import Token
 class UserManager(BaseUserManager):
     """Manager for user profiles"""
 
-    # The create_user method is passed:
-    # self:      All methods in Python receive the class as the first argument
-    # email:     Because we want to be able to log users in with email
-    #            instead of username (Django's default behavior)
-    # password:  The password has a default of None for validation purposes.
-    #            This ensures the proper error is thrown if a password is
-    #            not provided.
-    # **extra_fields:  Just in case there are extra arguments passed.
     def create_user(self, email, password=None, **extra_fields):
         """Create a new user profile"""
         # Add a custom validation error
@@ -21,11 +13,6 @@ class UserManager(BaseUserManager):
             raise ValueError('User must have an email address')
 
         # Create a user from the UserModel
-        # Use the normalize_email method from the BaseUserManager to
-        # normalize the domain of the email
-        # We'll also unwind the extra fields.  Remember that two asterisk (**)
-        # in Python refers to the extra keyword arguments that are passed into
-        # a function (meaning these are key=value pairs).
         user = self.model(email=self.normalize_email(email), **extra_fields)
 
         # Use the set_password method to hash the password
@@ -56,32 +43,21 @@ class UserManager(BaseUserManager):
 # Inherit from AbstractBaseUser and PermissionsMixin:
 class User(PermissionsMixin, AbstractBaseUser):
     """Database model for users"""
-    # As with any Django models, we need to define the fields
-    # for the model with the type and options:
+    
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    # Any time we call User.objects (such as in objects.all() or objects.filter())
-    # make sure to use the custom user manager we created.
     objects = UserManager()
-
-    # Tell Django to use the email field as the unique identifier for the
-    # user account instead of its built in behavior of using the username.
     USERNAME_FIELD = 'email'
-    # This doesn't mean the field is required (that's defined above in the field options)
-    # This refers to the fields that are prompted for when creating a superuser.
-    # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#django.contrib.auth.models.CustomUser.REQUIRED_FIELDS
-    # REQUIRED_FIELDS = ['name']
 
-    # Standard Python: We'll create a string representation so when
-    # the class is output we'll get something meaningful.
     def __str__(self):
         """Return string representation of the user"""
         return self.email
 
     def get_auth_token(self):
+        """Generates and adds token to User"""
         Token.objects.filter(user=self).delete()
         token = Token.objects.create(user=self)
         self.token = token.key
@@ -89,6 +65,7 @@ class User(PermissionsMixin, AbstractBaseUser):
         return token.key
 
     def delete_token(self):
+        """Removes token from user"""
         Token.objects.filter(user=self).delete()
         self.token = None
         self.save()
