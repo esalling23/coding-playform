@@ -9,6 +9,7 @@ djangorestframework = "*"
 pylint = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+pylint-django = "*"
 
 [dev-packages]
 
