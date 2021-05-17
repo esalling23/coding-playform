@@ -43,7 +43,7 @@ class UserManager(BaseUserManager):
 # Inherit from AbstractBaseUser and PermissionsMixin:
 class User(PermissionsMixin, AbstractBaseUser):
     """Database model for users"""
-    
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
