@@ -10,6 +10,7 @@ pylint = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 pylint-django = "*"
+coverage = "*"
 
 [dev-packages]
 
